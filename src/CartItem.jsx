@@ -1,10 +1,12 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { removeItem, updateQuantity } from './CartSlice';
 import './CartItem.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux'; // <-- DUPLICATE
+
 
 const CartItem = ({ onContinueShopping }) => {
+  const [showCart, setShowCart] = useState(true);
   const cart = useSelector(state => state.cart.items);
   const dispatch = useDispatch();
 
@@ -12,7 +14,7 @@ const CartItem = ({ onContinueShopping }) => {
   const calculateTotalAmount = () => {
     let total=0;
     cart.forEach(item=>{
-        quantity=item.quantity;
+        const quantity=item.quantity;
         const cost=parseFloat(item.cost.substring(1));
         total+=cost*quantity
     });
@@ -25,6 +27,14 @@ const CartItem = ({ onContinueShopping }) => {
     onContinueShopping(e);
     
   };
+  const handleAddToCart = (product) => {
+  dispatch(addItem({
+    name: product.name,
+    cost: product.cost,
+    image: product.image,
+    quantity: 1
+  }));
+};
 
 
   const handleIncrement = (item) => {
@@ -40,7 +50,7 @@ const CartItem = ({ onContinueShopping }) => {
   };
 
   const handleRemove = (item) => {
-    dispatch(removeItem(itemName))
+    dispatch(removeItem(item.name))
   };
   const handleCheckoutShopping = (e) => {
   alert('Functionality to be added for future reference');
