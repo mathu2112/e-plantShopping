@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { removeItem, updateQuantity } from './CartSlice';
 import './CartItem.css';
@@ -12,60 +12,55 @@ const CartItem = ({ onContinueShopping }) => {
 
   // Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
-    let total=0;
-    cart.forEach(item=>{
-        const quantity=item.quantity;
-        const cost=parseFloat(item.cost.substring(1));
-        total+=cost*quantity
+    let total = 0;
+    cart.forEach(item => {
+      const quantity = item.quantity;
+      const cost = parseFloat(item.cost.substring(1));
+      total += cost * quantity;
     });
     return total;
-  }
+  };
 
   const handleContinueShopping = (e) => {
     e.preventDefault();
     setShowCart(false);
     onContinueShopping(e);
-    
   };
-  const handleAddToCart = (product) => {
-  dispatch(addItem({
-    name: product.name,
-    cost: product.cost,
-    image: product.image,
-    quantity: 1
-  }));
-};
 
+  const handleAddToCart = (product) => {
+    dispatch(addItem({
+      name: product.name,
+      cost: product.cost,
+      image: product.image,
+      quantity: 1
+    }));
+  };
 
   const handleIncrement = (item) => {
-    dispatch(updateQuantity({ name: item.name, quantity: item.quantity + 1 }))
+    dispatch(updateQuantity({ name: item.name, quantity: item.quantity + 1 }));
   };
 
   const handleDecrement = (item) => {
-   if (item.quantity > 1) {
-    dispatch(updateQuantity({ name: item.name, quantity: item.quantity - 1 }));
-  } else {
-    dispatch(removeItem(item.name));
-  }
+    if (item.quantity > 1) {
+      dispatch(updateQuantity({ name: item.name, quantity: item.quantity - 1 }));
+    } else {
+      dispatch(removeItem(item.name));
+    }
   };
 
   const handleRemove = (item) => {
-    dispatch(removeItem(item.name))
+    dispatch(removeItem(item.name));
   };
-  const handleCheckoutShopping = (e) => {
-  alert('Functionality to be added for future reference');
-};
 
-  // Calculate total cost based on quantity for an item
+  const handleCheckoutShopping = (e) => {
+    alert('Functionality to be added for future reference');
+  };
+
   const calculateTotalCost = (item) => {
     const unitPrice = parseFloat(item.cost.substring(1));
-
-
-  const totalCost = unitPrice * item.quantity;
-
-  return totalCost;
-}
-  
+    const totalCost = unitPrice * item.quantity;
+    return totalCost;
+  };
 
   return (
     <div className="cart-container">
