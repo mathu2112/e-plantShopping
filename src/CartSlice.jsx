@@ -1,44 +1,42 @@
+// CartSlice.jsx
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  items: [], // Initialize items as an empty array
+  items: [] // Array to hold cart items
 };
 
-export const CartSlice = createSlice({
+const cartSlice = createSlice({
   name: 'cart',
   initialState,
   reducers: {
+    
     addItem: (state, action) => {
-      const { name, image, cost } = action.payload;
-      const existingItem = state.items.find(item => item.name === name);
-      if (existingItem) {
-        existingItem.quantity++;
-      } else {
-        state.items.push({ name, image, cost, quantity: 1 });
+      const newItem = action.payload;
+      const exists = state.items.find(item => item.name === newItem.name);
+      if (!exists) {
+        state.items.push(newItem); // Add only if not already in cart
       }
     },
-    removeItem: (state, action) => {
-      const plantName = action.payload;
-      const existingItemIndex = state.items.findIndex(item => item.name === plantName);
 
-      if (existingItemIndex !== -1) {
-        if (state.items[existingItemIndex].quantity > 1) {
-          state.items[existingItemIndex].quantity -= 1;
-        } else {
-          state.items.splice(existingItemIndex, 1);
-        }
-      }
+    
+    removeItem: (state, action) => {
+      const nameToRemove = action.payload;
+      state.items = state.items.filter(item => item.name !== nameToRemove);
     },
+
+    
     updateQuantity: (state, action) => {
       const { name, quantity } = action.payload;
-      const itemToUpdate = state.items.find(item => item.name === name);
-      if (itemToUpdate) {
-        itemToUpdate.quantity = quantity;
+      const item = state.items.find(item => item.name === name);
+      if (item) {
+        item.quantity = quantity;
       }
-    },
-  },
+    }
+  }
 });
 
-export const { addItem, removeItem, updateQuantity } = CartSlice.actions;
 
-export default CartSlice.reducer;
+export const { addItem, removeItem, updateQuantity } = cartSlice.actions;
+
+
+export default cartSlice.reducer;
