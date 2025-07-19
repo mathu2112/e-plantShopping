@@ -17,37 +17,49 @@ const CartItem = ({ onContinueShopping }) => {
 
   return (
     <div className="cart-container">
-      <h2>Shopping Cart</h2>
+      <h2>Total Cart Amount: ${calculateTotalAmount()}</h2>
       {cart.length === 0 ? (
         <>
           <p>Your cart is empty.</p>
-          <button className="get-started-button1" onClick={onContinueShopping}>
+          <button className="continue-button" onClick={onContinueShopping}>
             Continue Shopping
           </button>
         </>
       ) : (
-        <>
-          {cart.map(item => (
-            <div className="cart-item" key={item.id}>
-              <img src={item.image} alt={item.name} className="cart-item-image" />
-              <div className="cart-item-details">
-                <div className="cart-item-name">{item.name}</div>
-                <div className="cart-item-cost">Price: {item.price.toFixed(2)}</div>
-                <div className="cart-item-quantity">
-                  <button className="cart-item-button" onClick={() => dispatch(updateQuantity({ id: item.id, quantity: item.quantity - 1 }))}>-</button>
-                  <span className="cart-item-quantity-value">{item.quantity}</span>
-                  <button className="cart-item-button" onClick={() => dispatch(updateQuantity({ id: item.id, quantity: item.quantity + 1 }))}>+</button>
-                </div>
-                <div className="cart-item-total">Total: {(item.price * item.quantity).toFixed(2)}</div>
-                <button className="cart-item-delete" onClick={() => dispatch(removeItem(item.id))}>Remove</button>
+        cart.map(item => (
+          <div className="cart-item" key={item.id}>
+            <img src={item.image} alt={item.name} className="cart-item-image" />
+            <div className="cart-item-info">
+              <h3>{item.name}</h3>
+              <p className="price">${item.price.toFixed(2)}</p>
+              <div className="quantity-controls">
+                <button
+                  className="qty-btn"
+                  onClick={() => {
+                    if (item.quantity > 1) {
+                      dispatch(updateQuantity({ id: item.id, quantity: item.quantity - 1 }));
+                    } else {
+                      dispatch(removeItem(item.id));
+                    }
+                  }}
+                >
+                  -
+                </button>
+                <span className="qty-value">{item.quantity}</span>
+                <button
+                  className="qty-btn"
+                  onClick={() => dispatch(updateQuantity({ id: item.id, quantity: item.quantity + 1 }))}
+                >
+                  +
+                </button>
               </div>
+              <p className="item-total">Total: ${(item.price * item.quantity).toFixed(2)}</p>
+              <button className="delete-btn" onClick={() => dispatch(removeItem(item.id))}>
+                Delete
+              </button>
             </div>
-          ))}
-          <div className="total_cart_amount">Grand Total: ${calculateTotalAmount()}</div>
-          <button className="get-started-button1 continue_shopping_btn" onClick={onContinueShopping}>
-            Continue Shopping
-          </button>
-        </>
+          </div>
+        ))
       )}
     </div>
   );
