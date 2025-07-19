@@ -4,9 +4,9 @@ import { removeItem, updateQuantity } from './CartSlice';
 import './CartItem.css';
 import { useDispatch } from 'react-redux'; 
 
-
 const CartItem = ({ onContinueShopping }) => {
   const [showCart, setShowCart] = useState(true);
+  const [addedItems, setAddedItems] = useState([]); 
   const cart = useSelector(state => state.cart.items);
   const dispatch = useDispatch();
 
@@ -27,13 +27,10 @@ const CartItem = ({ onContinueShopping }) => {
     onContinueShopping(e);
   };
 
-  const handleAddToCart = (product) => {
-    dispatch(addItem({
-      name: product.name,
-      cost: product.cost,
-      image: product.image,
-      quantity: 1
-    }));
+  const handleAddToCartClick = (itemName) => { 
+    if (!addedItems.includes(itemName)) {
+      setAddedItems([...addedItems, itemName]);
+    }
   };
 
   const handleIncrement = (item) => {
@@ -59,7 +56,7 @@ const CartItem = ({ onContinueShopping }) => {
   const calculateTotalCost = (item) => {
     const unitPrice = parseFloat(item.cost.substring(1));
     const totalCost = unitPrice * item.quantity;
-    return totalCost;
+    return `$${totalCost}`;
   };
 
   return (
@@ -77,8 +74,24 @@ const CartItem = ({ onContinueShopping }) => {
                 <span className="cart-item-quantity-value">{item.quantity}</span>
                 <button className="cart-item-button cart-item-button-inc" onClick={() => handleIncrement(item)}>+</button>
               </div>
-              <div className="cart-item-total">Total: ${calculateTotalCost(item)}</div>
+              <div className="cart-item-total">Total: {calculateTotalCost(item)}</div> 
               <button className="cart-item-delete" onClick={() => handleRemove(item)}>Delete</button>
+              
+            
+              <button
+                onClick={() => handleAddToCartClick(item.name)}
+                style={{
+                  backgroundColor: addedItems.includes(item.name) ? 'grey' : '#007bff',
+                  color: 'white',
+                  padding: '6px 12px',
+                  marginTop: '10px',
+                  border: 'none',
+                  borderRadius: '4px',
+                  cursor: 'pointer'
+                }}
+              >
+                {addedItems.includes(item.name) ? 'Added to Cart' : 'Add to Cart'}
+              </button>
             </div>
           </div>
         ))}
