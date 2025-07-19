@@ -7,13 +7,11 @@ const CartItem = ({ onContinueShopping }) => {
   const cart = useSelector(state => state.cart.items);
   const dispatch = useDispatch();
 
-  // 🔢 Calculate subtotal for an individual item
   const calculateItemSubtotal = (item) => {
-    const price = parseFloat(item.price.toString().substring(1)); // Assuming price is like "$10"
+    const price = parseFloat(item.price.toString().substring(1));
     return price * item.quantity;
   };
 
-  // 💰 Calculate total cost for all items
   const calculateTotalAmount = () => {
     return cart.reduce((total, item) => {
       const price = parseFloat(item.price.toString().substring(1));
@@ -21,12 +19,10 @@ const CartItem = ({ onContinueShopping }) => {
     }, 0);
   };
 
-  // ➕ Increment quantity
   const handleIncrement = (item) => {
     dispatch(updateQuantity({ id: item.id, quantity: item.quantity + 1 }));
   };
 
-  // ➖ Decrement quantity (or remove if 0)
   const handleDecrement = (item) => {
     if (item.quantity > 1) {
       dispatch(updateQuantity({ id: item.id, quantity: item.quantity - 1 }));
@@ -35,18 +31,15 @@ const CartItem = ({ onContinueShopping }) => {
     }
   };
 
-  // ❌ Remove item
   const handleRemove = (itemId) => {
     dispatch(removeItem(itemId));
   };
 
-  // 🔁 Continue shopping
   const handleContinueShopping = (e) => {
     e.preventDefault();
     onContinueShopping(e);
   };
 
-  // 🛒 Placeholder checkout handler
   const handleCheckoutShopping = () => {
     alert('Checkout functionality will be added later.');
   };
